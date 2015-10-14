@@ -3,6 +3,13 @@
 session_start();
 
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
+    throw new RuntimeException(
+        'Build temple'
+    );
+}
+
+
 if ($_SERVER['REQUEST_URI'] == '/status') {
     echo json_encode([ ]); die;
 }
@@ -80,7 +87,21 @@ $(function(){ poll(); });
 <?php } ?>
 
 
+<?php if (isset($_COOKIE['username'])) { ?>
+    <?php if (isset($_COOKIE['village'])) { ?>
+        <style> input { padding: 10px; } button { padding: 12px; } </style>
+        <form method="post" action="/temple">
+            <button>costruisci templio</button>
+        </form>
+    <?php } ?>
+<?php } ?>
 
 
-
+cookie:
 <?php var_dump($_COOKIE); ?>
+
+post:
+<?php var_dump($_POST); ?>
+
+server:
+<?php var_dump($_SERVER); ?>
