@@ -2,3 +2,4 @@
 
  * Login
  * After first login, user must tell the name of its own village
+ * Add Logout feature

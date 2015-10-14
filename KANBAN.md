@@ -1,7 +1,5 @@
 # In progress
 
- * Add Logout feature
-
 # Backlog
 
  * User must build a temple to win
