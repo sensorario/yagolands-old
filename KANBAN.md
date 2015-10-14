@@ -1,5 +1,7 @@
 # In progress
 
+ * Add Logout feature
+
 # Backlog
 
  * User must build a temple to win
@@ -11,4 +13,3 @@
  * User can see the time when building or something else ends
  * Create a script to run php builtin server
  * Remove hardcoded port 8000 in the redirection after login
- * Add Logout feature
