@@ -4,9 +4,9 @@ session_start();
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
-    throw new RuntimeException(
-        'Build temple'
-    );
+    setcookie('temple-built-at', (new DateTime('+33 seconds'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s'));
+    Header("HTTP/1.1 301 Moved Permanently");
+    Header("Location: http://localhost:8000");
 }
 
 
@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_URI'] == '/status') {
 if ($_SERVER['REQUEST_URI'] == '/logout') {
     setcookie('village', null);
     setcookie('username', null);
+    setcookie('temple-built-at', null);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
