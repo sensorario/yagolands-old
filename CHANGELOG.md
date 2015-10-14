@@ -1,3 +1,4 @@
 # Release 0.1.0
 
  * Login
+ * After first login, user must tell the name of its own village
