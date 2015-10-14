@@ -2,8 +2,17 @@
 
 session_start();
 
+
 if ($_SERVER['REQUEST_URI'] == '/status') {
     echo json_encode([ ]); die;
+}
+
+
+if ($_SERVER['REQUEST_URI'] == '/logout') {
+    setcookie('village', null);
+    setcookie('username', null);
+    Header("HTTP/1.1 301 Moved Permanently");
+    Header("Location: http://localhost:8000");
 }
 
 
@@ -55,6 +64,11 @@ $(function(){ poll(); });
 
 
 <?php if (isset($_COOKIE['username'])) { ?>
+    <?php echo $_COOKIE['username']; ?> <a href="/logout">(logout)</a>
+<?php } ?>
+
+
+<?php if (isset($_COOKIE['username'])) { ?>
     <?php if (!isset($_COOKIE['village'])) { ?>
     <style> input { padding: 10px; } button { padding: 12px; } </style>
     <form method="post" action="/village">
@@ -64,6 +78,9 @@ $(function(){ poll(); });
     </form>
     <?php } ?>
 <?php } ?>
+
+
+
 
 
 <?php var_dump($_COOKIE); ?>
