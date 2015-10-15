@@ -46,6 +46,10 @@ if ($_SERVER['REQUEST_URI'] == '/' && isset($_POST['username'])) {
 
 ?>
 
+<h1>Yagolands</h1>
+<?php if (isset($_COOKIE['village'])) { ?>
+    <h2>Village: <?php echo $_COOKIE['village']; ?></h2>
+<?php } ?>
 
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script>
@@ -118,7 +122,8 @@ if ($end <= $now) {
 
 
 <?php if (isset($_COOKIE['username']) && isset($_COOKIE['temple-built'])) { ?>
-    <h1>You win the game, <strong><?php echo $_COOKIE['username']; ?></strong></h1>
+    <h2>Congratulations <?php echo $_COOKIE['username']; ?>, from the
+    <?php echo $_COOKIE['village']; ?> village. You won the game.</h2>
 <?php } ?>
 
 
