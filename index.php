@@ -64,7 +64,7 @@ $(function(){ poll(); });
 <style> input { padding: 10px; } button { padding: 12px; } </style>
 <form method="post">
     <label for="username">Username: </label>
-    <input type="text" name="username" placeholder="username" />
+    <input type="text" name="username" placeholder="username" autofocus/>
     <label for="password">Password: </label>
     <input type="password" name="password" placeholder="password" />
     <button>accedi</button>
@@ -82,7 +82,7 @@ $(function(){ poll(); });
     <style> input { padding: 10px; } button { padding: 12px; } </style>
     <form method="post" action="/village">
         <label for="village">Village</label>:
-        <input type="text" name="village-name" placeholder="Mordor" />
+        <input type="text" name="village-name" placeholder="Mordor" autofocus/>
         <button>accedi</button>
     </form>
     <?php } ?>
@@ -122,7 +122,7 @@ if ($end <= $now) {
 <?php } ?>
 
 
-<?php if (!isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
+<?php if (!isset($_COOKIE['temple-built-at']) && !isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
     <?php if (isset($_COOKIE['village'])) { ?>
         <style> input { padding: 10px; } button { padding: 12px; } </style>
         <form method="post" action="/temple">
