@@ -3,6 +3,13 @@
 session_start();
 
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
+    setcookie('temple-built-at', (new DateTime('+5 seconds'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s'));
+    Header("HTTP/1.1 301 Moved Permanently");
+    Header("Location: http://localhost:8000");
+}
+
+
 if ($_SERVER['REQUEST_URI'] == '/status') {
     echo json_encode([ ]); die;
 }
@@ -11,6 +18,7 @@ if ($_SERVER['REQUEST_URI'] == '/status') {
 if ($_SERVER['REQUEST_URI'] == '/logout') {
     setcookie('village', null);
     setcookie('username', null);
+    setcookie('temple-built-at', null);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
@@ -80,7 +88,47 @@ $(function(){ poll(); });
 <?php } ?>
 
 
+<?php if (isset($_COOKIE['temple-built-at'])) { ?>
+<?php
+$now = (new DateTime('now'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s');
+$end = (new DateTime($_COOKIE['temple-built-at']))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s');
+
+if ($end <= $now) {
+    setcookie('temple-built-at', null);
+    Header("HTTP/1.1 301 Moved Permanently");
+    Header("Location: http://localhost:8000");
+}
+?>
+    <script>
+        function pollTemple() {
+            var adesso = Math.floor(Date.now() / 1000);
+            var fine = <?php echo (new DateTime($_COOKIE['temple-built-at']))->getTimestamp(); ?>;
+            if (fine > adesso) {
+                setTimeout('pollTemple()', 1000);
+            } else {
+                document.location.reload();
+            }
+        }
+        pollTemple();
+    </script>
+<?php } ?>
 
 
+<?php if (isset($_COOKIE['username'])) { ?>
+    <?php if (isset($_COOKIE['village'])) { ?>
+        <style> input { padding: 10px; } button { padding: 12px; } </style>
+        <form method="post" action="/temple">
+            <button>costruisci templio</button>
+        </form>
+    <?php } ?>
+<?php } ?>
 
+
+cookie:
 <?php var_dump($_COOKIE); ?>
+
+post:
+<?php var_dump($_POST); ?>
+
+server:
+<?php var_dump($_SERVER); ?>
