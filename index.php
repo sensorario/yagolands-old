@@ -64,7 +64,7 @@ $(function(){ poll(); });
 <style> input { padding: 10px; } button { padding: 12px; } </style>
 <form method="post">
     <label for="username">Username: </label>
-    <input type="text" name="username" placeholder="username" />
+    <input type="text" name="username" placeholder="username" autofocus/>
     <label for="password">Password: </label>
     <input type="password" name="password" placeholder="password" />
     <button>accedi</button>
