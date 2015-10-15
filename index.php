@@ -122,7 +122,7 @@ if ($end <= $now) {
 <?php } ?>
 
 
-<?php if (!isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
+<?php if (!isset($_COOKIE['temple-built-at']) && !isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
     <?php if (isset($_COOKIE['village'])) { ?>
         <style> input { padding: 10px; } button { padding: 12px; } </style>
         <form method="post" action="/temple">
