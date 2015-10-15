@@ -1,6 +1,7 @@
 # Release 0.2.0
 
  * Autofocus on forms
+ * Improved titles and messages
 
 # Release 0.1.0
 
