@@ -1,3 +1,7 @@
+# Release 0.2.0
+
+ * Autofocus on forms
+
 # Release 0.1.0
 
  * Login
