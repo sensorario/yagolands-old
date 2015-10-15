@@ -4,14 +4,30 @@ session_start();
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
-    setcookie('temple-built-at', (new DateTime('+5 seconds'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s'));
+    setcookie('temple-built-at', (new DateTime('+50 seconds'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s'));
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
 
 
 if ($_SERVER['REQUEST_URI'] == '/status') {
-    echo json_encode([ ]); die;
+    $json = [];
+
+    if (isset($_COOKIE['village'])) {
+        $json['village'] = $_COOKIE['village'];
+    }
+
+    if (isset($_COOKIE['username'])) {
+        $json['username'] = $_COOKIE['username'];
+    }
+
+    if (isset($_COOKIE['temple-built-at'])) {
+        $now = (new DateTime('now'))->getTimestamp();
+        $end = (new DateTime($_COOKIE['temple-built-at']))->getTimestamp();
+        $json['seconds-left'] = $end - $now;
+    }
+
+    echo json_encode($json); die;
 }
 
 
@@ -46,21 +62,26 @@ if ($_SERVER['REQUEST_URI'] == '/' && isset($_POST['username'])) {
 
 ?>
 
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
 <h1>Yagolands</h1>
 <?php if (isset($_COOKIE['village'])) { ?>
     <h2>Village: <?php echo $_COOKIE['village']; ?></h2>
 <?php } ?>
+<div id="seconds_left">0</div>
 
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
+
 <script>
-var handlePoll = function(data) { console.log(data); }
-
-function poll() {
-    $.post('http://localhost:8000/status', {}, handlePoll);
-    setTimeout('poll()', 3000);
+var handlePoll = function(data) {
+    player.status.seconds_left = data['seconds-left'];
+    console.log(data);
 }
 
-$(function(){ poll(); });
+function updateServerInformations() {
+    $.post('http://localhost:8000/status', {}, handlePoll, 'json');
+    setTimeout('updateServerInformations()', 5000);
+}
+
+$(function(){ updateServerInformations(); });
 </script>
 
 
@@ -135,6 +156,26 @@ if ($end <= $now) {
         </form>
     <?php } ?>
 <?php } ?>
+
+<script>
+var player = {};
+player.status = {
+    seconds_left: 0
+};
+</script>
+
+<script>
+    function updateLocalStatus() {
+        player.status.seconds_left--;
+        if (player.status.seconds_left>0) {
+            $('#seconds_left').html(player.status.seconds_left);
+        } else {
+            $('#seconds_left').html(0);
+        }
+        setTimeout('updateLocalStatus()', 1000);
+    }
+    updateLocalStatus();
+</script>
 
 <?php if(isset($_ENV['debug'])) { ?>
     cookie:
