@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_URI'] == '/logout') {
     setcookie('village', null);
     setcookie('username', null);
     setcookie('temple-built-at', null);
+    setcookie('temple-built', null);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
@@ -26,7 +27,7 @@ if ($_SERVER['REQUEST_URI'] == '/logout') {
 
 if ($_SERVER['REQUEST_URI'] == '/village' && isset($_POST['village-name'])) {
     $villageName = $_POST['village-name'];
-    setcookie('village', $_POST['village-name'], time()+3600);
+    setcookie('village', $villageName);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
@@ -95,9 +96,11 @@ $end = (new DateTime($_COOKIE['temple-built-at']))->setTimezone(new DateTimezone
 
 if ($end <= $now) {
     setcookie('temple-built-at', null);
+    setcookie('temple-built', true, time()+3600);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
+
 ?>
     <script>
         function pollTemple() {
@@ -114,7 +117,12 @@ if ($end <= $now) {
 <?php } ?>
 
 
-<?php if (isset($_COOKIE['username'])) { ?>
+<?php if (isset($_COOKIE['username']) && isset($_COOKIE['temple-built'])) { ?>
+    <h1>You win the game, <strong><?php echo $_COOKIE['username']; ?></strong></h1>
+<?php } ?>
+
+
+<?php if (!isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
     <?php if (isset($_COOKIE['village'])) { ?>
         <style> input { padding: 10px; } button { padding: 12px; } </style>
         <form method="post" action="/temple">
