@@ -2,6 +2,7 @@
 
  * Autofocus on forms
  * Fixed messages and titles
+ * Show seconds left
 
 # Release 0.1.0
 
