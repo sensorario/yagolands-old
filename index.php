@@ -82,7 +82,7 @@ $(function(){ poll(); });
     <style> input { padding: 10px; } button { padding: 12px; } </style>
     <form method="post" action="/village">
         <label for="village">Village</label>:
-        <input type="text" name="village-name" placeholder="Mordor" />
+        <input type="text" name="village-name" placeholder="Mordor" autofocus/>
         <button>accedi</button>
     </form>
     <?php } ?>
