@@ -131,12 +131,13 @@ if ($end <= $now) {
     <?php } ?>
 <?php } ?>
 
+<?php if(isset($_ENV['debug'])) { ?>
+    cookie:
+    <?php var_dump($_COOKIE); ?>
 
-cookie:
-<?php var_dump($_COOKIE); ?>
+    post:
+    <?php var_dump($_POST); ?>
 
-post:
-<?php var_dump($_POST); ?>
-
-server:
-<?php var_dump($_SERVER); ?>
+    server:
+    <?php var_dump($_SERVER); ?>
+<?php } ?>
