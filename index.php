@@ -1,10 +1,26 @@
 <?php
 
+
+require_once 'vendor/autoload.php';
+
+
 session_start();
 
 
+$temple = Yago\Building::box([
+    'wood' => 23,
+    'clay' => 22,
+]);
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
-    setcookie('temple-built-at', (new DateTime('+50 seconds'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s'));
+    $secondsToBuildTemple = $temple->secondsToBuild();
+    $dateTimeModifier = "+{$secondsToBuildTemple} seconds";
+    $templeBuiltAt = (new DateTime($dateTimeModifier))
+        ->setTimezone(new DateTimezone('UTC'))
+        ->format('Y-m-dTH:i:s');
+    setcookie('temple-built-at', $templeBuiltAt);
+
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
