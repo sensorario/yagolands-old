@@ -41,7 +41,9 @@ if ($_SERVER['REQUEST_URI'] == '/status') {
     if (isset($_COOKIE['temple-built-at'])) {
         $now = (new DateTime('now'))->getTimestamp();
         $end = (new DateTime($_COOKIE['temple-built-at']))->getTimestamp();
-        $json['seconds-left'] = $end - $now;
+        $json['seconds-left'] = $end > $now
+            ? $end - $now
+            : 0;
     }
 
     echo json_encode($json); die;
@@ -84,13 +86,18 @@ if ($_SERVER['REQUEST_URI'] == '/' && isset($_POST['username'])) {
 <?php if (isset($_COOKIE['village'])) { ?>
     <h2>Village: <?php echo $_COOKIE['village']; ?></h2>
 <?php } ?>
-<div id="seconds_left">0</div>
+
 
 
 <script>
+var player = {};
+
+player.status = {
+    seconds_left: 0
+};
+
 var handlePoll = function(data) {
     player.status.seconds_left = data['seconds-left'];
-    console.log(data);
 }
 
 function updateServerInformations() {
@@ -145,17 +152,31 @@ if ($end <= $now) {
 
 ?>
     <script>
-        function pollTemple() {
+        function updateLocalStatus() {
             var adesso = Math.floor(Date.now() / 1000);
             var fine = <?php echo (new DateTime($_COOKIE['temple-built-at']))->getTimestamp(); ?>;
-            if (fine > adesso) {
-                setTimeout('pollTemple()', 1000);
-            } else {
+            if (fine < adesso) {
                 document.location.reload();
             }
+            player.status.seconds_left--;
+            if (player.status.seconds_left>0) {
+                var total   = player.status.seconds_left;
+                var seconds = total % 60;
+                var minutes = (total - seconds) / 60;
+
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                $('#seconds_left').html(seconds);
+                $('#minutes_left').html(minutes);
+            } else {
+                $('#seconds_left').html('00');
+            }
+            setTimeout('updateLocalStatus()', 1000);
         }
-        pollTemple();
+        updateLocalStatus();
     </script>
+    <div id="seconds_left_container">Seconds left: <span id="minutes_left"></span>:<span id="seconds_left"></span></div>
 <?php } ?>
 
 
@@ -174,25 +195,6 @@ if ($end <= $now) {
     <?php } ?>
 <?php } ?>
 
-<script>
-var player = {};
-player.status = {
-    seconds_left: 0
-};
-</script>
-
-<script>
-    function updateLocalStatus() {
-        player.status.seconds_left--;
-        if (player.status.seconds_left>0) {
-            $('#seconds_left').html(player.status.seconds_left);
-        } else {
-            $('#seconds_left').html(0);
-        }
-        setTimeout('updateLocalStatus()', 1000);
-    }
-    updateLocalStatus();
-</script>
 
 <?php if(isset($_ENV['debug'])) { ?>
     cookie:
