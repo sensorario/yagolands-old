@@ -4,16 +4,17 @@
 require_once 'vendor/autoload.php';
 
 
+use Symfony\Component\Yaml\Yaml;
+use Yago\Building;
+
+
 session_start();
 
 
-$temple = Yago\Building::box([
-    'wood' => 23,
-    'clay' => 22,
-]);
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
+    $yaml = file_get_contents('app/config/buildings.yml');
+    $conf = Yaml::parse($yaml);
+    $temple = Building::box($conf['buildings']['temple']);
     $secondsToBuildTemple = $temple->secondsToBuild();
     $dateTimeModifier = "+{$secondsToBuildTemple} seconds";
     $templeBuiltAt = (new DateTime($dateTimeModifier))
