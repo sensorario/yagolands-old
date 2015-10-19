@@ -160,15 +160,23 @@ if ($end <= $now) {
             }
             player.status.seconds_left--;
             if (player.status.seconds_left>0) {
-                $('#seconds_left').html(player.status.seconds_left);
+                var total   = player.status.seconds_left;
+                var seconds = total % 60;
+                var minutes = (total - seconds) / 60;
+
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                $('#seconds_left').html(seconds);
+                $('#minutes_left').html(minutes);
             } else {
-                $('#seconds_left').html(0);
+                $('#seconds_left').html('00');
             }
             setTimeout('updateLocalStatus()', 1000);
         }
         updateLocalStatus();
     </script>
-    <div id="seconds_left_container">Seconds left: <span id="seconds_left"></span></div>
+    <div id="seconds_left_container">Seconds left: <span id="minutes_left"></span>:<span id="seconds_left"></span></div>
 <?php } ?>
 
 
