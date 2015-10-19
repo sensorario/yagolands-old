@@ -157,8 +157,22 @@ if ($end <= $now) {
             }
         }
         pollTemple();
+        var player = {};
+        player.status = {
+            seconds_left: 0
+        };
+        function updateLocalStatus() {
+            player.status.seconds_left--;
+            if (player.status.seconds_left>0) {
+                $('#seconds_left').html(player.status.seconds_left);
+            } else {
+                $('#seconds_left').html(0);
+            }
+            setTimeout('updateLocalStatus()', 1000);
+        }
+        updateLocalStatus();
     </script>
-    <div id="seconds_left">0</div>
+    <div id="seconds_left"></div>
 <?php } ?>
 
 
@@ -177,25 +191,6 @@ if ($end <= $now) {
     <?php } ?>
 <?php } ?>
 
-<script>
-var player = {};
-player.status = {
-    seconds_left: 0
-};
-</script>
-
-<script>
-    function updateLocalStatus() {
-        player.status.seconds_left--;
-        if (player.status.seconds_left>0) {
-            $('#seconds_left').html(player.status.seconds_left);
-        } else {
-            $('#seconds_left').html(0);
-        }
-        setTimeout('updateLocalStatus()', 1000);
-    }
-    updateLocalStatus();
-</script>
 
 <?php if(isset($_ENV['debug'])) { ?>
     cookie:
