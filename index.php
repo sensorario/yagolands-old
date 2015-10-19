@@ -84,7 +84,11 @@ if ($_SERVER['REQUEST_URI'] == '/' && isset($_POST['username'])) {
 <?php if (isset($_COOKIE['village'])) { ?>
     <h2>Village: <?php echo $_COOKIE['village']; ?></h2>
 <?php } ?>
-<div id="seconds_left">0</div>
+
+
+<?php if (isset($_COOKIE['username'])) { ?>
+    <div id="seconds_left">0</div>
+<?php } ?>
 
 
 <script>
