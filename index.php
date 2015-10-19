@@ -86,10 +86,6 @@ if ($_SERVER['REQUEST_URI'] == '/' && isset($_POST['username'])) {
 <?php } ?>
 
 
-<?php if (isset($_COOKIE['username'])) { ?>
-    <div id="seconds_left">0</div>
-<?php } ?>
-
 
 <script>
 var handlePoll = function(data) {
@@ -160,6 +156,7 @@ if ($end <= $now) {
         }
         pollTemple();
     </script>
+    <div id="seconds_left">0</div>
 <?php } ?>
 
 
