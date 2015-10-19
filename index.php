@@ -41,7 +41,9 @@ if ($_SERVER['REQUEST_URI'] == '/status') {
     if (isset($_COOKIE['temple-built-at'])) {
         $now = (new DateTime('now'))->getTimestamp();
         $end = (new DateTime($_COOKIE['temple-built-at']))->getTimestamp();
-        $json['seconds-left'] = $end - $now;
+        $json['seconds-left'] = $end > $now
+            ? $end - $now
+            : 0;
     }
 
     echo json_encode($json); die;
