@@ -90,9 +90,14 @@ if ($_SERVER['REQUEST_URI'] == '/' && isset($_POST['username'])) {
 
 
 <script>
+var player = {};
+
+player.status = {
+    seconds_left: 0
+};
+
 var handlePoll = function(data) {
     player.status.seconds_left = data['seconds-left'];
-    console.log(data);
 }
 
 function updateServerInformations() {
@@ -147,21 +152,12 @@ if ($end <= $now) {
 
 ?>
     <script>
-        function pollTemple() {
+        function updateLocalStatus() {
             var adesso = Math.floor(Date.now() / 1000);
             var fine = <?php echo (new DateTime($_COOKIE['temple-built-at']))->getTimestamp(); ?>;
-            if (fine > adesso) {
-                setTimeout('pollTemple()', 1000);
-            } else {
+            if (fine < adesso) {
                 document.location.reload();
             }
-        }
-        pollTemple();
-        var player = {};
-        player.status = {
-            seconds_left: 0
-        };
-        function updateLocalStatus() {
             player.status.seconds_left--;
             if (player.status.seconds_left>0) {
                 $('#seconds_left').html(player.status.seconds_left);
@@ -172,7 +168,7 @@ if ($end <= $now) {
         }
         updateLocalStatus();
     </script>
-    <div id="seconds_left"></div>
+    <div id="seconds_left_container">Seconds left: <span id="seconds_left"></span></div>
 <?php } ?>
 
 
