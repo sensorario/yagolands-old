@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6ebe4e17bdae9b7244748ba750d79ec0",
+    "hash": "bcb8b5bb9a6c17c8f4bbd2340439f946",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -909,6 +909,42 @@
             "time": "2015-06-21 13:59:46"
         },
         {
+            "name": "sensorario/value-object",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensorario/value-object.git",
+                "reference": "08240c0b5c7a46ae1f46e1535dc46d09e5d73a37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensorario/value-object/zipball/08240c0b5c7a46ae1f46e1535dc46d09e5d73a37",
+                "reference": "08240c0b5c7a46ae1f46e1535dc46d09e5d73a37",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Simone Gentili",
+                    "email": "sensorario@gmail.com"
+                }
+            ],
+            "description": "A Value Object Implementation in PHP?",
+            "time": "2015-10-12 22:28:07"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v2.7.5",
             "source": {
@@ -961,7 +997,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "sensorario/value-object": 0
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

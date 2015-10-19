@@ -1,10 +1,27 @@
 <?php
 
+
+require_once 'vendor/autoload.php';
+
+
+use Symfony\Component\Yaml\Yaml;
+use Yago\Building;
+
+
 session_start();
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
-    setcookie('temple-built-at', (new DateTime('+50 seconds'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s'));
+    $yaml = file_get_contents('app/config/buildings.yml');
+    $conf = Yaml::parse($yaml);
+    $temple = Building::box($conf['buildings']['temple']);
+    $secondsToBuildTemple = $temple->secondsToBuild();
+    $dateTimeModifier = "+{$secondsToBuildTemple} seconds";
+    $templeBuiltAt = (new DateTime($dateTimeModifier))
+        ->setTimezone(new DateTimezone('UTC'))
+        ->format('Y-m-dTH:i:s');
+    setcookie('temple-built-at', $templeBuiltAt);
+
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
