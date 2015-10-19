@@ -11,16 +11,30 @@ use Yago\Building;
 session_start();
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_SERVER['REQUEST_URI'] == '/temple') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && (
+    $_SERVER['REQUEST_URI'] == '/temple' ||
+    $_SERVER['REQUEST_URI'] == '/castle'
+)) {
     $yaml = file_get_contents('app/config/buildings.yml');
     $conf = Yaml::parse($yaml);
-    $temple = Building::box($conf['buildings']['temple']);
-    $secondsToBuildTemple = $temple->secondsToBuild();
-    $dateTimeModifier = "+{$secondsToBuildTemple} seconds";
-    $templeBuiltAt = (new DateTime($dateTimeModifier))
+
+    if ($_SERVER['REQUEST_URI'] == '/castle') {
+        $building = Building::box($conf['buildings']['castle']);
+        setcookie('building-in-progress', 'castle');
+    } else {
+        $building = Building::box($conf['buildings']['temple']);
+        setcookie('building-in-progress', 'temple');
+    }
+
+    $secondsToBuildBuilding = $building->secondsToBuild();
+
+    $dateTimeModifier = "+{$secondsToBuildBuilding} seconds";
+
+    $buildingBuiltAt = (new DateTime($dateTimeModifier))
         ->setTimezone(new DateTimezone('UTC'))
         ->format('Y-m-dTH:i:s');
-    setcookie('temple-built-at', $templeBuiltAt);
+
+    setcookie('building-built-at', $buildingBuiltAt);
 
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
@@ -38,9 +52,9 @@ if ($_SERVER['REQUEST_URI'] == '/status') {
         $json['username'] = $_COOKIE['username'];
     }
 
-    if (isset($_COOKIE['temple-built-at'])) {
+    if (isset($_COOKIE['building-built-at'])) {
         $now = (new DateTime('now'))->getTimestamp();
-        $end = (new DateTime($_COOKIE['temple-built-at']))->getTimestamp();
+        $end = (new DateTime($_COOKIE['building-built-at']))->getTimestamp();
         $json['seconds-left'] = $end > $now
             ? $end - $now
             : 0;
@@ -53,8 +67,10 @@ if ($_SERVER['REQUEST_URI'] == '/status') {
 if ($_SERVER['REQUEST_URI'] == '/logout') {
     setcookie('village', null);
     setcookie('username', null);
-    setcookie('temple-built-at', null);
+    setcookie('building-built-at', null);
+    setcookie('building-in-progress', null);
     setcookie('temple-built', null);
+    setcookie('castle-built', null);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
@@ -138,14 +154,14 @@ $(function(){ updateServerInformations(); });
 <?php } ?>
 
 
-<?php if (isset($_COOKIE['temple-built-at'])) { ?>
+<?php if (isset($_COOKIE['building-built-at'])) { ?>
 <?php
 $now = (new DateTime('now'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s');
-$end = (new DateTime($_COOKIE['temple-built-at']))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s');
+$end = (new DateTime($_COOKIE['building-built-at']))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s');
 
 if ($end <= $now) {
-    setcookie('temple-built-at', null);
-    setcookie('temple-built', true, time()+3600);
+    setcookie('building-built-at', null);
+    setcookie($_COOKIE['building-in-progress'] . '-built', true, time()+3600);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
@@ -154,7 +170,7 @@ if ($end <= $now) {
     <script>
         function updateLocalStatus() {
             var adesso = Math.floor(Date.now() / 1000);
-            var fine = <?php echo (new DateTime($_COOKIE['temple-built-at']))->getTimestamp(); ?>;
+            var fine = <?php echo (new DateTime($_COOKIE['building-built-at']))->getTimestamp(); ?>;
             if (fine < adesso) {
                 document.location.reload();
             }
@@ -186,11 +202,16 @@ if ($end <= $now) {
 <?php } ?>
 
 
-<?php if (!isset($_COOKIE['temple-built-at']) && !isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
-    <?php if (isset($_COOKIE['village'])) { ?>
+<?php if (!isset($_COOKIE['building-built-at']) && !isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
+    <?php if (isset($_COOKIE['castle-built'])) { ?>
         <style> input { padding: 10px; } button { padding: 12px; } </style>
         <form method="post" action="/temple">
-            <button>costruisci templio</button>
+            <button>build temple</button>
+        </form>
+    <?php } ?>
+    <?php if (!isset($_COOKIE['castle-built']) && isset($_COOKIE['village'])) { ?>
+        <form method="post" action="/castle">
+            <button>build castle</button>
         </form>
     <?php } ?>
 <?php } ?>
