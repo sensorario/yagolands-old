@@ -19,7 +19,14 @@ Feature: Guest user shoud user username and password
     Scenario: village is named and user build its own castle
         Given I am "sensorario"
         Then I have a village named "Mordor"
+        And also have a windmill
         And I press "build castle"
+        Then the response should contain "Seconds left:"
+
+    Scenario: village is named and user build its own windmill
+        Given I am "sensorario"
+        Then I have a village named "Mordor"
+        And I press "build windmill"
         Then the response should contain "Seconds left:"
 
     Scenario: castle is built and user build temple

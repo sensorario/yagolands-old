@@ -5,3 +5,6 @@ buildings:
     castle:
         wood: 4
         clay: 7
+    windmill:
+        wood: 2
+        clay: 3

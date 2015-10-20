@@ -12,6 +12,24 @@ use Yago\Queue;
 session_start();
 
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_SERVER['REQUEST_URI'] == '/windmill')) {
+    $yaml = file_get_contents('app/config/buildings.yml');
+    $conf = Yaml::parse($yaml);
+
+    $building = Building::box($conf['buildings']['windmill']);
+    setcookie('building-in-progress', 'windmill');
+
+    $secondsToBuildBuilding = $building->secondsToBuild();
+    $dateTimeModifier = "+{$secondsToBuildBuilding} seconds";
+    $buildingBuiltAt = (new DateTime($dateTimeModifier))
+        ->setTimezone(new DateTimezone('UTC'))
+        ->format('Y-m-dTH:i:s');
+    setcookie('building-built-at', $buildingBuiltAt);
+    Header("HTTP/1.1 301 Moved Permanently");
+    Header("Location: http://localhost:8000");
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_SERVER['REQUEST_URI'] == '/castle')) {
     $yaml = file_get_contents('app/config/buildings.yml');
     $conf = Yaml::parse($yaml);
@@ -77,6 +95,7 @@ if ($_SERVER['REQUEST_URI'] == '/logout') {
     setcookie('building-in-progress', null);
     setcookie('temple-built', null);
     setcookie('castle-built', null);
+    setcookie('windmill-built', null);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
@@ -216,10 +235,16 @@ if ($end <= $now) {
             <button>build temple</button>
         </form>
     <?php } ?>
-    <?php if (!isset($_COOKIE['castle-built']) && isset($_COOKIE['village'])) { ?>
+    <?php if (!isset($_COOKIE['castle-built']) && isset($_COOKIE['windmill-built']) && isset($_COOKIE['village'])) { ?>
         <style> input { padding: 10px; } button { padding: 12px; } </style>
         <form method="post" action="/castle">
             <button>build castle</button>
+        </form>
+    <?php } ?>
+    <?php if (!isset($_COOKIE['windmill-built']) && isset($_COOKIE['village'])) { ?>
+        <style> input { padding: 10px; } button { padding: 12px; } </style>
+        <form method="post" action="/windmill">
+            <button>build windmill</button>
         </form>
     <?php } ?>
 <?php } ?>

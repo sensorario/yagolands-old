@@ -66,4 +66,14 @@ class FeatureContext implements Context, SnippetAcceptingContext
             ->setCookie('temple-built', '1');
         $this->minkContext->visit('/');
     }
+
+    /**
+     * @Then also have a windmill
+     */
+    public function iHaveAWindmill()
+    {
+        $this->minkContext->getSession()
+            ->setCookie('windmill-built', '1');
+        $this->minkContext->visit('/');
+    }
 }
