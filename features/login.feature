@@ -16,3 +16,20 @@ Feature: Guest user shoud user username and password
         And press "accedi"
         Then the response should contain "Village: Mordor"
 
+    Scenario: village is named and user build its own castle
+        Given I am "sensorario"
+        Then I have a village named "Mordor"
+        And I press "build castle"
+        Then the response should contain "Seconds left:"
+
+    Scenario: castle is built and user build temple
+        Given I am "sensorario"
+        And I have a castle
+        And I press "build temple"
+        Then the response should contain "Seconds left:"
+
+    Scenario: temple is built
+        Given I am "sensorario"
+        And I have a temple
+        Then the response should contain "Congratulations sensorario, from the mordor village. You won the game."
+

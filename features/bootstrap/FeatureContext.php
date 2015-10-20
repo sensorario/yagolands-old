@@ -30,4 +30,40 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $this->minkContext->fillField("password", "sensorario");
         $this->minkContext->pressButton("accedi");
     }
+
+    /**
+     * @Then I have a village named :villageName
+     */
+    public function iHaveAVillageNamed($villageName)
+    {
+        $this->minkContext->getSession()
+            ->setCookie('village', $villageName);
+        $this->minkContext->visit('/');
+    }
+
+    /**
+     * @Then I have a castle
+     */
+    public function iHaveACastle()
+    {
+        $this->minkContext->getSession()
+            ->setCookie('village', 'mordor');
+        $this->minkContext->getSession()
+            ->setCookie('castle-built', '1');
+        $this->minkContext->visit('/');
+    }
+
+    /**
+     * @Then I have a temple
+     */
+    public function iHaveATemple()
+    {
+        $this->minkContext->getSession()
+            ->setCookie('village', 'mordor');
+        $this->minkContext->getSession()
+            ->setCookie('castle-built', '1');
+        $this->minkContext->getSession()
+            ->setCookie('temple-built', '1');
+        $this->minkContext->visit('/');
+    }
 }
