@@ -1,7 +1,8 @@
 {
     "require": {
         "phpunit/phpunit": "4.*",
-        "sensorario/value-object": "@stable"
+        "sensorario/value-object": "@stable",
+        "behat/behat": "~3"
     },
     "autoload": {
         "psr-4": { "": "src/" }

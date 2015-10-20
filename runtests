@@ -1,1 +1,3 @@
+clear
 vendor/bin/phpunit
+vendor/bin/behat
