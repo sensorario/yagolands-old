@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_URI'] == '/village' && isset($_POST['village-name'])) {
 }
 
 
-if ($_SERVER['REQUEST_URI'] == '/' && isset($_POST['username'])) {
+if ($_SERVER['REQUEST_URI'] == '/login' && isset($_POST['username'])) {
     $usernameIsCorrect = 'sensorario' == $_POST['username'];
     $passwordIsCorrect = 'sensorario' == $_POST['password'];
     if ($passwordIsCorrect && $usernameIsCorrect) {
@@ -131,7 +131,7 @@ $(function(){ updateServerInformations(); });
 </script>
 
 
-<?php if (!isset($_COOKIE['username'])) { ?>
+<?php if (!isset($_COOKIE['username']) && $_SERVER['REQUEST_URI'] == '/login') { ?>
 <style> input { padding: 10px; } button { padding: 12px; } </style>
 <form method="post">
     <label for="username">Username: </label>
@@ -145,6 +145,8 @@ $(function(){ updateServerInformations(); });
 
 <?php if (isset($_COOKIE['username'])) { ?>
     <?php echo $_COOKIE['username']; ?> <a href="/logout">(logout)</a>
+<?php } else { ?>
+    <a href="/login">login</a>
 <?php } ?>
 
 

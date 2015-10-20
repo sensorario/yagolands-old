@@ -5,6 +5,8 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
+ini_set('xdebug.max_nesting_level', -1);
+
 /**
  * Defines application features from the specific context.
  */

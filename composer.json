@@ -2,7 +2,8 @@
     "require": {
         "phpunit/phpunit": "4.*",
         "sensorario/value-object": "@stable",
-        "behat/behat": "~3"
+        "behat/behat": "@stable",
+        "behat/mink-extension": "~2.1"
     },
     "autoload": {
         "psr-4": { "": "src/" }
