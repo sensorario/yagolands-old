@@ -144,7 +144,7 @@ $(function(){ updateServerInformations(); });
 
 
 <?php if (isset($_COOKIE['username'])) { ?>
-    <?php echo $_COOKIE['username']; ?> <a href="/logout">(logout)</a>
+    Hi! <?php echo $_COOKIE['username']; ?> <a href="/logout">(logout)</a>
 <?php } else { ?>
     <a href="/login">login</a>
 <?php } ?>
