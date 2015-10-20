@@ -1,7 +1,7 @@
 buildings:
     temple:
-        wood: 33
-        clay: 42
+        wood: 3
+        clay: 2
     castle:
-        wood: 24
-        clay: 40
+        wood: 4
+        clay: 7

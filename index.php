@@ -6,36 +6,42 @@ require_once 'vendor/autoload.php';
 
 use Symfony\Component\Yaml\Yaml;
 use Yago\Building;
+use Yago\Queue;
 
 
 session_start();
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && (
-    $_SERVER['REQUEST_URI'] == '/temple' ||
-    $_SERVER['REQUEST_URI'] == '/castle'
-)) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_SERVER['REQUEST_URI'] == '/castle')) {
     $yaml = file_get_contents('app/config/buildings.yml');
     $conf = Yaml::parse($yaml);
 
-    if ($_SERVER['REQUEST_URI'] == '/castle') {
-        $building = Building::box($conf['buildings']['castle']);
-        setcookie('building-in-progress', 'castle');
-    } else {
-        $building = Building::box($conf['buildings']['temple']);
-        setcookie('building-in-progress', 'temple');
-    }
+    $building = Building::box($conf['buildings']['castle']);
+    setcookie('building-in-progress', 'castle');
 
     $secondsToBuildBuilding = $building->secondsToBuild();
-
     $dateTimeModifier = "+{$secondsToBuildBuilding} seconds";
-
     $buildingBuiltAt = (new DateTime($dateTimeModifier))
         ->setTimezone(new DateTimezone('UTC'))
         ->format('Y-m-dTH:i:s');
-
     setcookie('building-built-at', $buildingBuiltAt);
+    Header("HTTP/1.1 301 Moved Permanently");
+    Header("Location: http://localhost:8000");
+}
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_SERVER['REQUEST_URI'] == '/temple')) {
+    $yaml = file_get_contents('app/config/buildings.yml');
+    $conf = Yaml::parse($yaml);
+
+    $building = Building::box($conf['buildings']['temple']);
+    setcookie('building-in-progress', 'temple');
+
+    $secondsToBuildBuilding = $building->secondsToBuild();
+    $dateTimeModifier = "+{$secondsToBuildBuilding} seconds";
+    $buildingBuiltAt = (new DateTime($dateTimeModifier))
+        ->setTimezone(new DateTimezone('UTC'))
+        ->format('Y-m-dTH:i:s');
+    setcookie('building-built-at', $buildingBuiltAt);
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
@@ -210,6 +216,7 @@ if ($end <= $now) {
         </form>
     <?php } ?>
     <?php if (!isset($_COOKIE['castle-built']) && isset($_COOKIE['village'])) { ?>
+        <style> input { padding: 10px; } button { padding: 12px; } </style>
         <form method="post" action="/castle">
             <button>build castle</button>
         </form>
