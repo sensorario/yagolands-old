@@ -20,6 +20,29 @@
 
             $(function(){ updateServerInformations(); });
         </script>
+        {% if cookie['building-built-at'] is defined %}
+            <script>
+                function updateLocalStatus() {
+                    if (player.status.seconds_left-- >= 0) {
+                        var total   = player.status.seconds_left;
+                        var seconds = total % 60;
+                        var minutes = (total - seconds) / 60;
+
+                        if (seconds >= 0) {
+                            minutes = minutes < 10 ? '0' + minutes : minutes;
+                            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                            $('#seconds_left').html(seconds);
+                            $('#minutes_left').html(minutes);
+                        }
+                    } else {
+                        document.location.reload();
+                    }
+                    setTimeout('updateLocalStatus()', 1000);
+                }
+                updateLocalStatus();
+            </script>
+        {% endif %}
     </head>
     <body>
 
@@ -79,6 +102,10 @@
 
         {% if cookie['temple-built'] is defined %}
             <h2>Congratulations {{cookie.username}}, from the {{cookie.village}} village. You won the game.</h2>
+        {% endif %}
+
+        {% if cookie['building-built-at'] is defined %}
+            <div id="seconds_left_container">Seconds left: <span id="minutes_left"></span>:<span id="seconds_left"></span></div>
         {% endif %}
 
     </body>

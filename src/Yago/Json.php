@@ -3,6 +3,7 @@
 namespace Yago;
 
 use DateTime;
+use DateTimezone;
 
 final class Json
 {
@@ -19,11 +20,22 @@ final class Json
         }
 
         if (isset($_COOKIE['building-built-at'])) {
+            $now = (new DateTime('now'))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s');
+            $end = (new DateTime($_COOKIE['building-built-at']))->setTimezone(new DateTimezone('UTC'))->format('Y-m-dTH:i:s');
+            if ($end <= $now) {
+                setcookie('building-built-at', null);
+                setcookie($_COOKIE['building-in-progress'] . '-built', true, time()+3600);
+            }
+
             $now = (new DateTime('now'))->getTimestamp();
             $end = (new DateTime($_COOKIE['building-built-at']))->getTimestamp();
-            $this->jsonContent['seconds-left'] = $end > $now
+            $this->jsonContent['seconds-left'] = $end >= $now
                 ? $end - $now
                 : 0;
+
+            $this->jsonContent['building-built-at'] = $end >= $now
+                ? $_COOKIE['building-built-at']
+                : null;
         }
     }
 
