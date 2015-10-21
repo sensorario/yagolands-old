@@ -3,7 +3,8 @@
         "phpunit/phpunit": "4.*",
         "sensorario/value-object": "@stable",
         "behat/behat": "@stable",
-        "behat/mink-extension": "~2.1"
+        "behat/mink-extension": "~2.1",
+        "twig/twig": "~1.22"
     },
     "autoload": {
         "psr-4": { "": "src/" }

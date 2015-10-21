@@ -9,6 +9,8 @@ use Yago\Building;
 use Yago\Json;
 use Yago\Queue;
 use Yago\Status;
+use \Twig_Environment;
+use \Twig_Loader_Filesystem;
 
 
 session_start();
@@ -105,64 +107,24 @@ if ($_SERVER['REQUEST_URI'] == '/login' && isset($_POST['username'])) {
 }
 
 
+$loader = new Twig_Loader_Filesystem(__DIR__ . '/templates');
+$twig = new Twig_Environment($loader, [
+//    'cache' => __DIR__ . '/app/cache',
+]);
+
 ?>
 
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<h1>Yagolands</h1>
-<?php if (isset($_COOKIE['village'])) { ?>
-    <h2>Village: <?php echo $_COOKIE['village']; ?></h2>
+<?php if ($_SERVER['REQUEST_URI'] == '/') { ?>
+<?php echo $twig->render('base.twig', [
+    'cookie' => $_COOKIE
+]); ?>
 <?php } ?>
-
-
-
-<script>
-var player = {};
-
-player.status = {
-    seconds_left: 0
-};
-
-var handlePoll = function(data) {
-    player.status.seconds_left = data['seconds-left'];
-}
-
-function updateServerInformations() {
-    $.post('http://localhost:8000/status', {}, handlePoll, 'json');
-    setTimeout('updateServerInformations()', 5000);
-}
-
-$(function(){ updateServerInformations(); });
-</script>
 
 
 <?php if (!isset($_COOKIE['username']) && $_SERVER['REQUEST_URI'] == '/login') { ?>
-<style> input { padding: 10px; } button { padding: 12px; } </style>
-<form method="post">
-    <label for="username">Username: </label>
-    <input type="text" name="username" placeholder="username" autofocus/>
-    <label for="password">Password: </label>
-    <input type="password" name="password" placeholder="password" />
-    <button>accedi</button>
-</form>
-<?php } ?>
-
-
-<?php if (isset($_COOKIE['username'])) { ?>
-    Hi! <?php echo $_COOKIE['username']; ?> <a href="/logout">(logout)</a>
-<?php } else { ?>
-    <a href="/login">login</a>
-<?php } ?>
-
-
-<?php if (isset($_COOKIE['username'])) { ?>
-    <?php if (!isset($_COOKIE['village'])) { ?>
-    <style> input { padding: 10px; } button { padding: 12px; } </style>
-    <form method="post" action="/village">
-        <label for="village">Village</label>:
-        <input type="text" name="village-name" placeholder="Mordor" autofocus/>
-        <button>accedi</button>
-    </form>
-    <?php } ?>
+<?php echo $twig->render('login.twig', [
+    'cookie' => $_COOKIE
+]); ?>
 <?php } ?>
 
 
@@ -210,34 +172,6 @@ if ($end <= $now) {
 
 <?php if (isset($_COOKIE['username']) && isset($_COOKIE['temple-built'])) { ?>
     <h2>Congratulations <?php echo $_COOKIE['username']; ?>, from the <?php echo $_COOKIE['village']; ?> village. You won the game.</h2>
-<?php } ?>
-
-
-<?php if (Status::userCanBuild()) { ?>
-    <?php if (isset($_COOKIE['castle-built'])) { ?>
-        <style> input { padding: 10px; } button { padding: 12px; } </style>
-        <form method="post" action="/temple">
-            <button>build temple</button>
-        </form>
-    <?php } ?>
-    <?php if (!isset($_COOKIE['castle-built'])) { ?>
-        <?php if(isset($_COOKIE['windmill-built'])) { ?>
-            <?php if (isset($_COOKIE['village'])) { ?>
-                <style> input { padding: 10px; } button { padding: 12px; } </style>
-                <form method="post" action="/castle">
-                    <button>build castle</button>
-                </form>
-            <?php } ?>
-        <?php } ?>
-    <?php } ?>
-    <?php if (!isset($_COOKIE['windmill-built'])) { ?>
-        <?php if (isset($_COOKIE['village'])) { ?>
-            <style> input { padding: 10px; } button { padding: 12px; } </style>
-            <form method="post" action="/windmill">
-                <button>build windmill</button>
-            </form>
-        <?php } ?>
-    <?php } ?>
 <?php } ?>
 
 

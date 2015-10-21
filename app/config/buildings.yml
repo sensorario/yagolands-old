@@ -1,10 +1,10 @@
 buildings:
     temple:
-        wood: 3
-        clay: 2
+        wood: 1
+        clay: 1
     castle:
-        wood: 4
-        clay: 7
+        wood: 1
+        clay: 1
     windmill:
-        wood: 2
-        clay: 3
+        wood: 1
+        clay: 1
