@@ -3,6 +3,8 @@
  * Autofocus on forms
  * Fixed messages and titles
  * Show seconds left
+ * Realtime countdown
+ * Twig as template engine
 
 # Release 0.1.0
 
