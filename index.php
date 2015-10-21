@@ -3,10 +3,12 @@
 
 require_once 'vendor/autoload.php';
 
-
+use Sensorario\ValueObject\ValueObject;
 use Symfony\Component\Yaml\Yaml;
 use Yago\Building;
+use Yago\Json;
 use Yago\Queue;
+use Yago\Status;
 
 
 session_start();
@@ -66,25 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_SERVER['REQUEST_URI'] == '/temple
 
 
 if ($_SERVER['REQUEST_URI'] == '/status') {
-    $json = [];
-
-    if (isset($_COOKIE['village'])) {
-        $json['village'] = $_COOKIE['village'];
-    }
-
-    if (isset($_COOKIE['username'])) {
-        $json['username'] = $_COOKIE['username'];
-    }
-
-    if (isset($_COOKIE['building-built-at'])) {
-        $now = (new DateTime('now'))->getTimestamp();
-        $end = (new DateTime($_COOKIE['building-built-at']))->getTimestamp();
-        $json['seconds-left'] = $end > $now
-            ? $end - $now
-            : 0;
-    }
-
-    echo json_encode($json); die;
+    echo Json::toJson();
+    die;
 }
 
 
@@ -228,24 +213,30 @@ if ($end <= $now) {
 <?php } ?>
 
 
-<?php if (!isset($_COOKIE['building-built-at']) && !isset($_COOKIE['temple-built']) && isset($_COOKIE['username'])) { ?>
+<?php if (Status::userCanBuild()) { ?>
     <?php if (isset($_COOKIE['castle-built'])) { ?>
         <style> input { padding: 10px; } button { padding: 12px; } </style>
         <form method="post" action="/temple">
             <button>build temple</button>
         </form>
     <?php } ?>
-    <?php if (!isset($_COOKIE['castle-built']) && isset($_COOKIE['windmill-built']) && isset($_COOKIE['village'])) { ?>
-        <style> input { padding: 10px; } button { padding: 12px; } </style>
-        <form method="post" action="/castle">
-            <button>build castle</button>
-        </form>
+    <?php if (!isset($_COOKIE['castle-built'])) { ?>
+        <?php if(isset($_COOKIE['windmill-built'])) { ?>
+            <?php if (isset($_COOKIE['village'])) { ?>
+                <style> input { padding: 10px; } button { padding: 12px; } </style>
+                <form method="post" action="/castle">
+                    <button>build castle</button>
+                </form>
+            <?php } ?>
+        <?php } ?>
     <?php } ?>
-    <?php if (!isset($_COOKIE['windmill-built']) && isset($_COOKIE['village'])) { ?>
-        <style> input { padding: 10px; } button { padding: 12px; } </style>
-        <form method="post" action="/windmill">
-            <button>build windmill</button>
-        </form>
+    <?php if (!isset($_COOKIE['windmill-built'])) { ?>
+        <?php if (isset($_COOKIE['village'])) { ?>
+            <style> input { padding: 10px; } button { padding: 12px; } </style>
+            <form method="post" action="/windmill">
+                <button>build windmill</button>
+            </form>
+        <?php } ?>
     <?php } ?>
 <?php } ?>
 
