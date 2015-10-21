@@ -1,3 +1,3 @@
 # Debug
 
-    debug=1 php -d variables_order=EGPCS -S localhost:8000
+    debug=1 php -d variables_order=EGPCS -S localhost:8000 -t web/
