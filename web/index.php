@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     foreach($conf['buildings'] as $building => $values) {
         if ($_SERVER['REQUEST_URI'] == '/' . $building) {
-            $buildingValue = Building::box($values);
+            $buildingValue = Building::box($values['resources']);
             setcookie('building-in-progress', $building);
             $secondsToBuildBuilding = $buildingValue->secondsToBuild();
             $dateTimeModifier = "+{$secondsToBuildBuilding} seconds";
