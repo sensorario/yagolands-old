@@ -1,7 +1,7 @@
 # Release 0.2.0
 
  * Autofocus on forms
- * Fixed messages and titles
+ * Improved titles and messages
  * Show seconds left
  * Realtime countdown
  * Twig as template engine
