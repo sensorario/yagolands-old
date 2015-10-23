@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $yaml = file_get_contents('../app/config/buildings.yml');
     $conf = Yaml::parse($yaml);
 
-    foreach($conf['buildings'] as $building => $values) {
+    foreach($conf['buildings']['resources'] as $building => $resourcess) {
         if ($_SERVER['REQUEST_URI'] == '/' . $building) {
-            $buildingValue = Building::box($values['resources']);
+            $buildingValue = Building::box($resourcess);
             setcookie('building-in-progress', $building);
             $secondsToBuildBuilding = $buildingValue->secondsToBuild();
             $dateTimeModifier = "+{$secondsToBuildBuilding} seconds";
