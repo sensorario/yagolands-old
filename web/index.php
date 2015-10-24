@@ -4,7 +4,11 @@ require_once '../vendor/autoload.php';
 
 use Symfony\Component\Yaml\Yaml;
 use Yago\Building;
+use Yago\BuildingTree;
+use Yago\Configuration;
+use Yago\DataLayer;
 use Yago\Json;
+use Yago\Player;
 use Yago\Status;
 use \Twig_Environment;
 use \Twig_Loader_Filesystem;
@@ -21,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $yaml = file_get_contents('../app/config/buildings.yml');
     $conf = Yaml::parse($yaml);
 
-    foreach($conf['buildings'] as $building => $values) {
+    foreach($conf['buildings']['resources'] as $building => $resourcess) {
         if ($_SERVER['REQUEST_URI'] == '/' . $building) {
-            $buildingValue = Building::box($values);
+            $buildingValue = Building::box($resourcess);
             setcookie('building-in-progress', $building);
             $secondsToBuildBuilding = $buildingValue->secondsToBuild();
             $dateTimeModifier = "+{$secondsToBuildBuilding} seconds";
@@ -95,16 +99,24 @@ if ($_SERVER['REQUEST_URI'] == '/login' && isset($_POST['username'])) {
 
 
 <?php
-$loader = new Twig_Loader_Filesystem(__DIR__ . '/../templates');
-$twig = new Twig_Environment($loader, [
-    //    'cache' => __DIR__ . '/app/cache',
-]);
+$twig = new Twig_Environment(
+    new Twig_Loader_Filesystem(__DIR__ . '/../templates'), [
+        //    'cache' => __DIR__ . '/app/cache',
+    ]
+);
 ?>
 
 
 <?php if ($_SERVER['REQUEST_URI'] == '/') { ?>
 <?php echo $twig->render('base.twig', [
-    'cookie' => $_COOKIE
+    'cookie' => $_COOKIE,
+    'dataLayer' => new DataLayer(),
+    'buildingTree' => new BuildingTree(
+        new Configuration(),
+        new Player(
+            new DataLayer()
+        )
+    )
 ]); ?>
 <?php } ?>
 
