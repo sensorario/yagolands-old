@@ -20,10 +20,10 @@
 
             $(function(){ updateServerInformations(); });
         </script>
-        {% if cookie['building-built-at'] is defined %}
+        {% if dataLayer.playerIsBuilding() %}
             <script>
                 function updateLocalStatus() {
-                    if (player.status.seconds_left-- >= 0) {
+                    if (--player.status.seconds_left>= -1) {
                         var total   = player.status.seconds_left;
                         var seconds = total % 60;
                         var minutes = (total - seconds) / 60;
@@ -70,41 +70,23 @@
         {% endif %}
 
         {% if cookie.username is defined and cookie.village is defined %}
-            {% if cookie['building-built-at'] is not defined %}
-                {% if cookie['castle-built'] is defined %}
-                    {% if cookie['temple-built'] is not defined %}
+            {% if not dataLayer.playerIsBuilding() %}
+                {% for building in buildingTree.buildingList() %}
+                    {% if buildingTree.isBuildable(building) %}
                         <style> input { padding: 10px; } button { padding: 12px; } </style>
-                        <form method="post" action="/temple">
-                            <button>build temple</button>
+                        <form method="post" action="/{{building}}">
+                            <button>build {{building}}</button>
                         </form>
                     {% endif %}
-                {% endif %}
-                {% if cookie['windmill-built'] is defined %}
-                    {% if cookie['village'] is defined %}
-                        {% if cookie['castle-built'] is not defined %}
-                            <style> input { padding: 10px; } button { padding: 12px; } </style>
-                            <form method="post" action="/castle">
-                                <button>build castle</button>
-                            </form>
-                        {% endif %}
-                    {% endif %}
-                {% endif %}
-                {% if cookie['village'] is defined %}
-                    {% if cookie['windmill-built'] is not defined %}
-                        <style> input { padding: 10px; } button { padding: 12px; } </style>
-                        <form method="post" action="/windmill">
-                            <button>build windmill</button>
-                        </form>
-                    {% endif %}
-                {% endif %}
+                {% endfor %}
             {% endif %}
         {% endif %}
 
-        {% if cookie['temple-built'] is defined %}
+        {% if dataLayer.playerHave('temple') %}
             <h2>Congratulations {{cookie.username}}, from the {{cookie.village}} village. You won the game.</h2>
         {% endif %}
 
-        {% if cookie['building-built-at'] is defined %}
+        {% if dataLayer.playerIsBuilding() %}
             <div id="seconds_left_container">Seconds left: <span id="minutes_left"></span>:<span id="seconds_left"></span></div>
         {% endif %}
 
