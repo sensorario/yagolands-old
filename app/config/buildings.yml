@@ -10,6 +10,8 @@ buildings:
             wood: 2
             clay: 2
     hierarchies:
+        castle:
+            windmill: 1
         temple:
             castle: 1
             windmill: 1
