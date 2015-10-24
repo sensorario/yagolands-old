@@ -1,4 +1,8 @@
-# Release 0.2.0
+# Release 0.3
+
+ * Complete refactoring
+
+# Release 0.2
 
  * Autofocus on forms
  * Improved titles and messages
@@ -6,7 +10,7 @@
  * Realtime countdown
  * Twig as template engine
 
-# Release 0.1.0
+# Release 0.1
 
  * Login
  * After first login, user must tell the name of its own village
