@@ -99,10 +99,18 @@ if ($_SERVER['REQUEST_URI'] == '/login' && isset($_POST['username'])) {
 
 
 <?php
+$yaml = file_get_contents('../app/config/twig.yml');
+$conf = Yaml::parse($yaml);
+
+$twigConfig = $conf['twig']['cache'] == true
+    ? ['cache' => __DIR__ . '/app/cache']
+    : [];
+
 $twig = new Twig_Environment(
-    new Twig_Loader_Filesystem(__DIR__ . '/../templates'), [
-        //    'cache' => __DIR__ . '/app/cache',
-    ]
+    new Twig_Loader_Filesystem(
+        __DIR__ . '/../templates',
+        $twigConfig
+    )
 );
 ?>
 
