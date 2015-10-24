@@ -48,47 +48,48 @@
 
         <h1>Yagolands</h1>
 
-        {% block content %}
+        <div id="authentication">
+            {% block authentication %}
+                {% if cookie.username is defined %}
+                    Hi! {{cookie.username}} <a href="/logout">(logout)</a>
+                {% else %}
+                    <a href="/login">login</a>
+                {% endif %}
+            {% endblock %}
+        </div>
+
+        <div id="game-area">
             {% if cookie.username is defined %}
-                Hi! {{cookie.username}} <a href="/logout">(logout)</a>
-            {% else %}
-                <a href="/login">login</a>
-            {% endif %}
-        {% endblock %}
-
-        {% if cookie.username is defined %}
-            {% if cookie.village is defined %}
-                <h2>Village: {{cookie.village}}</h2>
-            {% else %}
-                <style> input { padding: 10px; } button { padding: 12px; } </style>
-                <form method="post" action="/village">
-                    <label for="village">Village</label>:
-                    <input type="text" id="" name="village-name" placeholder="Mordor" autofocus/>
-                    <button>accedi</button>
-                </form>
-            {% endif %}
-        {% endif %}
-
-        {% if cookie.username is defined and cookie.village is defined %}
-            {% if not dataLayer.playerIsBuilding() %}
-                {% for building in buildingTree.buildingList() %}
-                    {% if buildingTree.isBuildable(building) %}
-                        <style> input { padding: 10px; } button { padding: 12px; } </style>
-                        <form method="post" action="/{{building}}">
-                            <button>build {{building}}</button>
-                        </form>
+                {% if cookie.village is defined %}
+                    <h2>Village: {{cookie.village}}</h2>
+                    {% if not dataLayer.playerIsBuilding() %}
+                        {% for building in buildingTree.buildingList() %}
+                            {% if buildingTree.isBuildable(building) %}
+                                <style> input { padding: 10px; } button { padding: 12px; } </style>
+                                <form method="post" action="/{{building}}">
+                                    <button>build {{building}}</button>
+                                </form>
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
-                {% endfor %}
+                {% else %}
+                    <style> input { padding: 10px; } button { padding: 12px; } </style>
+                    <form method="post" action="/village">
+                        <label for="village">Village</label>:
+                        <input type="text" id="" name="village-name" placeholder="Mordor" autofocus/>
+                        <button>accedi</button>
+                    </form>
+                {% endif %}
+
+                {% if dataLayer.playerHave('temple') %}
+                    <h2>Congratulations {{cookie.username}}, from the {{cookie.village}} village. You won the game.</h2>
+                {% endif %}
+
+                {% if dataLayer.playerIsBuilding() %}
+                    <div id="seconds_left_container">Seconds left: <span id="minutes_left"></span>:<span id="seconds_left"></span></div>
+                {% endif %}
             {% endif %}
-        {% endif %}
-
-        {% if dataLayer.playerHave('temple') %}
-            <h2>Congratulations {{cookie.username}}, from the {{cookie.village}} village. You won the game.</h2>
-        {% endif %}
-
-        {% if dataLayer.playerIsBuilding() %}
-            <div id="seconds_left_container">Seconds left: <span id="minutes_left"></span>:<span id="seconds_left"></span></div>
-        {% endif %}
+        </div>
 
     </body>
 </html>
