@@ -10,16 +10,10 @@ use Yago\DataLayer;
 use Yago\Json;
 use Yago\Player;
 use Yago\Status;
-use \Twig_Environment;
-use \Twig_Loader_Filesystem;
-
 
 session_start();
 
-?>
-
-
-<?php
+date_default_timezone_set('UTC');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $yaml = file_get_contents('../app/config/buildings.yml');
@@ -41,37 +35,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-?>
-
-
-<?php
-
 if ($_SERVER['REQUEST_URI'] == '/status') {
     echo Json::toJson();
     die;
 }
 
-?>
-
-
-<?php
-
 if ($_SERVER['REQUEST_URI'] == '/logout') {
-    setcookie('village', null);
-    setcookie('username', null);
-    setcookie('building-built-at', null);
-    setcookie('building-in-progress', null);
-    setcookie('temple-built', null);
-    setcookie('castle-built', null);
-    setcookie('windmill-built', null);
+    foreach($_COOKIE as $key => $value) {
+        setcookie($key, null);
+    }
+
     Header("HTTP/1.1 301 Moved Permanently");
     Header("Location: http://localhost:8000");
 }
-
-?>
-
-
-<?php
 
 if ($_SERVER['REQUEST_URI'] == '/village' && isset($_POST['village-name'])) {
     $villageName = $_POST['village-name'];
@@ -80,10 +56,6 @@ if ($_SERVER['REQUEST_URI'] == '/village' && isset($_POST['village-name'])) {
     Header("Location: http://localhost:8000");
 }
 
-?>
-
-
-<?php
 
 if ($_SERVER['REQUEST_URI'] == '/login' && isset($_POST['username'])) {
     $usernameIsCorrect = 'sensorario' == $_POST['username'];

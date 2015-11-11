@@ -13,16 +13,29 @@ buildings:
         granary:
             wood: 2
             clay: 2
+<<<<<<< HEAD
+=======
+        house:
+            wood: 2
+            clay: 2
+>>>>>>> dev
 
     hierarchies:
         castle:
             windmill: 1
+            house: 1
         temple:
             castle: 1
             windmill: 1
+<<<<<<< HEAD
             house: 1
             granary: 1
         granary:
             windmill: 1
         windmill:
             house: 1
+=======
+            granary: 1
+        granary:
+            windmill: 1
+>>>>>>> dev
