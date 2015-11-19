@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 ini_set('xdebug.max_nesting_level', -1);
+date_default_timezone_set('UTC');
 
 class FeatureContext implements Context, SnippetAcceptingContext
 {

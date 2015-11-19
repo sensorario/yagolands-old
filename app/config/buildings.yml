@@ -1,4 +1,5 @@
 buildings:
+
     resources:
         temple:
             wood: 2
@@ -9,9 +10,23 @@ buildings:
         windmill:
             wood: 2
             clay: 2
+        granary:
+            wood: 2
+            clay: 2
+        house:
+            wood: 2
+            clay: 2
+
     hierarchies:
         castle:
             windmill: 1
+            house: 1
         temple:
             castle: 1
             windmill: 1
+            house: 1
+            granary: 1
+        granary:
+            windmill: 1
+        windmill:
+            house: 1

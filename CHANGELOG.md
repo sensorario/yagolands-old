@@ -1,3 +1,8 @@
+# Release 0.4
+
+ * Improved removal of all cookies during logout
+ * Added few buildings
+
 # Release 0.3
 
  * Complete refactoring
